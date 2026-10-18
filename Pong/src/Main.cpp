@@ -9,7 +9,6 @@ Color Yellow = Color{ 243, 213, 91, 255 };
 
 int player_score = 0;
 int cpu_score = 0;
-int shallCpuMove = true;
 
 class Ball
 {
@@ -52,8 +51,7 @@ public:
 		int speed_choices[2] = { -1, 1 };
 		speed_x *= speed_choices[GetRandomValue(0, 1)];
 		speed_y *= speed_choices[GetRandomValue(0, 1)];
-	
-		shallCpuMove = true; 
+	 
 	}
 };
 
@@ -105,17 +103,17 @@ public:
 	{
 			
 	
-		if (shallCpuMove)
-		{
-			if (y + height / 2 < ball_y)
+		
+		
+			if (y + height / 2 < ball_y + GetRandomValue(70, 150))
 			{
 				y += speed;
 			}
-			else if (y + height / 2 > ball_y)
+			else if (y + height / 2 > ball_y - GetRandomValue(70, 150))
 			{
 				y -= speed;
 			}
-		}
+		
 
 		LimitMovement();
 		
@@ -148,12 +146,13 @@ int main()
 	player.height = 120;
 	player.x = screen_width - player.width - 10;
 	player.y = screen_height / 2 - player.height / 2; 
-	player.speed = 6;
+	player.speed = 7;
 
 	cpu.width = 25;
 	cpu.height = 120;
 	cpu.x = 10;
 	cpu.y = screen_height / 2 - player.height / 2;
+	cpu.speed = 7;
 
 	float time = 0.0f;
 	Sound paddle_bounce = LoadSound("./resources/paddleBounce.mp3");
@@ -164,7 +163,6 @@ int main()
 		BeginDrawing();
 
 		//Updating
-		cpu.speed = GetRandomValue(2, 7);
 		ball.Update();
 		player.Update();
 		cpu.Update(ball.y);
@@ -175,14 +173,13 @@ int main()
 		{
 			ball.speed_x *= -1;
 			ball.speed_y *= -1;
-			shallCpuMove = true;
 			PlaySound(paddle_bounce);
 		}
 		if (CheckCollisionCircleRec(Vector2{ ball.x, ball.y }, ball.radius, Rectangle{ cpu.x, cpu.y, cpu.width, cpu.height }))
 		{
 			ball.speed_x *= -1;
 			ball.speed_y *= -1;
-			shallCpuMove = false;
+
 			PlaySound(paddle_bounce);
 		}
 
